@@ -103,7 +103,9 @@ void callback(const sensor_msgs::PointCloud2ConstPtr& msg)
     cloud_cluster->width = cloud_cluster->size ();
     cloud_cluster->height = 1;
     cloud_cluster->is_dense = true;
-    cloud_cluster->header.frame_id = "perpendicular";
+
+    //frame to which the point cloud is published
+    cloud_cluster->header.frame_id = "zed2i_base_link";
 
     sensor_msgs::PointCloud2 msg;
     pcl::toROSMsg(*cloud_cluster, msg);
@@ -125,8 +127,8 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "cluster_extractor"); 
   ros::NodeHandle n;
-
-  ros::Subscriber sub = n.subscribe("/camera/depth/points", 1000, callback);
+  
+  ros::Subscriber sub = n.subscribe("/zed2i/zed_node/point_cloud/cloud_registered", 1000, callback);
  
   cluster_publisher = n.advertise<PointCloud>("/clusters", 1000);
   ros::spin();
